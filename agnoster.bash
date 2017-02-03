@@ -351,12 +351,33 @@ prompt_right_segment() {
     [[ -n $3 ]] && PRIGHT="$PRIGHT$3"
 }
 
+######################################################################
+## Emacs prompt --- for dir tracking
+# stick the following in your .emacs if you use this:
+
+# (setq dirtrack-list '(".*DIR *\\([^ ]*\\) DIR" 1 nil))
+# (defun dirtrack-filter-out-pwd-prompt (string)
+#   "dirtrack-mode doesn't remove the PWD match from the prompt.  This does."
+#   ;; TODO: support dirtrack-mode's multiline regexp.
+#   (if (and (stringp string) (string-match (first dirtrack-list) string))
+#       (replace-match "" t t string 0)
+#     string))
+# (add-hook 'shell-mode-hook
+#           #'(lambda ()
+#               (dirtrack-mode 1)
+#               (add-hook 'comint-preoutput-filter-functions
+#                         'dirtrack-filter-out-pwd-prompt t t)))
+
+prompt_emacsdir() {
+    # no color or other setting... this will be deleted per above
+    PR="DIR \w DIR$PR"
+ }
 
 ######################################################################
 ## Main prompt
 
 build_prompt() {
-
+    [[ ! -z ${AG_EMACS_DIR+x} ]] && prompt_emacsdir
     prompt_status
     [[ -z ${AG_NO_HIST+x} ]] && prompt_histdt
     [[ -z ${AG_NO_CONTEXT+x} ]] && prompt_context
