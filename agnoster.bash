@@ -94,6 +94,9 @@ text_effect() {
     esac
 }
 
+# to add colors, see
+# http://bitmote.com/index.php?post/2012/11/19/Using-ANSI-Color-Codes-to-Colorize-Your-Bash-Prompt-on-Linux
+# under the "256 (8-bit) Colors" section, and follow the example for orange below
 fg_color() {
     case "$1" in
 	black)   echo 30;;
@@ -104,6 +107,7 @@ fg_color() {
   	magenta) echo 35;;
   	cyan)    echo 36;;
   	white)   echo 37;;
+    orange)  echo 38\;5\;166;;
     esac
 }
 
@@ -117,6 +121,7 @@ bg_color() {
   	magenta) echo 45;;
   	cyan)    echo 46;;
   	white)   echo 47;;
+    orange)  echo 48\;5\;166;;
     esac;
 }
 
