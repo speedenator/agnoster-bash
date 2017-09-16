@@ -241,7 +241,7 @@ prompt_git() {
         else
             prompt_segment green black
         fi
-        PR="$PR${ref/refs\/heads\// }$dirty "
+        PR="$PR${ref/refs\/heads\// }$dirty"
     fi
 }
 
