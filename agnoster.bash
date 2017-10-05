@@ -205,6 +205,16 @@ prompt_end() {
     CURRENT_BG=''
 }
 
+### virtualenv prompt
+prompt_virtualenv() {
+  if [[ -n $VIRTUAL_ENV ]]; then
+    color=cyan
+    prompt_segment $color $PRIMARY_FG
+    prompt_segment $color white "$(basename $VIRTUAL_ENV)"
+  fi
+}
+
+
 ### Prompt components
 # Each component will draw itself, and hide itself if no information needs to be shown
 
@@ -384,8 +394,9 @@ prompt_emacsdir() {
 build_prompt() {
     [[ ! -z ${AG_EMACS_DIR+x} ]] && prompt_emacsdir
     prompt_status
-    [[ -z ${AG_NO_HIST+x} ]] && prompt_histdt
+    #[[ -z ${AG_NO_HIST+x} ]] && prompt_histdt
     [[ -z ${AG_NO_CONTEXT+x} ]] && prompt_context
+    prompt_virtualenv
     prompt_dir
     prompt_git
     prompt_end

@@ -7,9 +7,10 @@ A Powerline-inspired theme for BASH
 (Converted from ZSH theme by Kenny Root)
 https://gist.github.com/kruton/8345450
 
-Updated & fixed by Erik Selberg erik@selberg.org 1/14/17
-Tested on MacOSX, Ubuntu, Amazon Linux
-Bash v3 and v4
+Updated & fixed by Hanish K H on oct-05-2017
+
+# UPDATE
+Fixed the virtualenv prompt in bash
 
 # README
 
