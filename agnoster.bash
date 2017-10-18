@@ -71,7 +71,7 @@ PROMPT_DIRTRIM=2 # bash4 and above
 DEBUG=0
 debug() {
     if [[ ${DEBUG} -ne 0 ]]; then
-	>&2 echo -e $*
+        >&2 echo -e $*
     fi
 }
 
@@ -88,9 +88,9 @@ RIGHT_SUBSEG=''
 
 text_effect() {
     case "$1" in
-	reset)     echo 0;;
-	bold)      echo 1;;
-	underline) echo 4;;
+        reset)      echo 0;;
+        bold)       echo 1;;
+        underline)  echo 4;;
     esac
 }
 
@@ -99,29 +99,29 @@ text_effect() {
 # under the "256 (8-bit) Colors" section, and follow the example for orange below
 fg_color() {
     case "$1" in
-	black)   echo 30;;
-	red)     echo 31;;
-   	green)   echo 32;;
-  	yellow)  echo 33;;
-  	blue)    echo 34;;
-  	magenta) echo 35;;
-  	cyan)    echo 36;;
-  	white)   echo 37;;
-    orange)  echo 38\;5\;166;;
+        black)      echo 30;;
+        red)        echo 31;;
+        green)      echo 32;;
+        yellow)     echo 33;;
+        blue)       echo 34;;
+        magenta)    echo 35;;
+        cyan)       echo 36;;
+        white)      echo 37;;
+        orange)     echo 38\;5\;166;;
     esac
 }
 
 bg_color() {
     case "$1" in
-	black)   echo 40;;
-	red)     echo 41;;
-   	green)   echo 42;;
-  	yellow)  echo 43;;
-  	blue)    echo 44;;
-  	magenta) echo 45;;
-  	cyan)    echo 46;;
-  	white)   echo 47;;
-    orange)  echo 48\;5\;166;;
+        black)      echo 40;;
+        red)        echo 41;;
+        green)      echo 42;;
+        yellow)     echo 43;;
+        blue)       echo 44;;
+        magenta)    echo 45;;
+        cyan)       echo 46;;
+        white)      echo 47;;
+        orange)     echo 48\;5\;166;;
     esac;
 }
 
@@ -133,17 +133,17 @@ ansi() {
     declare -a mycodes=("${!1}")
 
     debug "ansi: ${!1} all: $* aka ${mycodes[@]}"
-    
+
     seq=""
     for ((i = 0; i < ${#mycodes[@]}; i++)); do
-	if [[ -n $seq ]]; then
-	    seq="${seq};"
-	fi
-	seq="${seq}${mycodes[$i]}"
+        if [[ -n $seq ]]; then
+            seq="${seq};"
+        fi
+        seq="${seq}${mycodes[$i]}"
     done
     debug "ansi debug:" '\\[\\033['${seq}'m\\]'
     echo -ne '\[\033['${seq}'m\]'
-#    PR="$PR\[\033[${seq}m\]"
+    # PR="$PR\[\033[${seq}m\]"
 }
 
 ansi_single() {
@@ -167,28 +167,28 @@ prompt_segment() {
     codes=("${codes[@]}" $(text_effect reset))
     #    fi
     if [[ -n $1 ]]; then
-	bg=$(bg_color $1)
-	codes=("${codes[@]}" $bg)
-	debug "Added $bg as background to codes"
+        bg=$(bg_color $1)
+        codes=("${codes[@]}" $bg)
+        debug "Added $bg as background to codes"
     fi
     if [[ -n $2 ]]; then
-	fg=$(fg_color $2)
-	codes=("${codes[@]}" $fg)
-	debug "Added $fg as foreground to codes"
+        fg=$(fg_color $2)
+        codes=("${codes[@]}" $fg)
+        debug "Added $fg as foreground to codes"
     fi
 
     debug "Codes: "
-#    declare -p codes
+    # declare -p codes
 
     if [[ $CURRENT_BG != NONE && $1 != $CURRENT_BG ]]; then
-	declare -a intermediate=($(fg_color $CURRENT_BG) $(bg_color $1))
-	debug "pre prompt " $(ansi intermediate[@])
-	PR="$PR $(ansi intermediate[@])$SEGMENT_SEPARATOR"
-	debug "post prompt " $(ansi codes[@])
-	PR="$PR$(ansi codes[@]) "
+        declare -a intermediate=($(fg_color $CURRENT_BG) $(bg_color $1))
+        debug "pre prompt " $(ansi intermediate[@])
+        PR="$PR $(ansi intermediate[@])$SEGMENT_SEPARATOR"
+        debug "post prompt " $(ansi codes[@])
+        PR="$PR$(ansi codes[@]) "
     else
-	debug "no current BG, codes is $codes[@]"
-	PR="$PR$(ansi codes[@]) "
+        debug "no current BG, codes is $codes[@]"
+        PR="$PR$(ansi codes[@]) "
     fi
     CURRENT_BG=$1
     [[ -n $3 ]] && PR="$PR$3"
@@ -197,8 +197,8 @@ prompt_segment() {
 # End the prompt, closing any open segments
 prompt_end() {
     if [[ -n $CURRENT_BG ]]; then
-	declare -a codes=($(text_effect reset) $(fg_color $CURRENT_BG))
-	PR="$PR $(ansi codes[@])$SEGMENT_SEPARATOR"
+        declare -a codes=($(text_effect reset) $(fg_color $CURRENT_BG))
+        PR="$PR $(ansi codes[@])$SEGMENT_SEPARATOR"
     fi
     declare -a reset=($(text_effect reset))
     PR="$PR $(ansi reset[@])"
@@ -221,16 +221,16 @@ prompt_virtualenv() {
 # Context: user@hostname (who am I and where am I)
 prompt_context() {
     local user=`whoami`
-    
+
     if [[ $user != $DEFAULT_USER || -n $SSH_CLIENT ]]; then
-	prompt_segment black default "$user@\h"
+        prompt_segment black default "$user@\h"
     fi
 }
 
 # prints history followed by HH:MM, useful for remembering what
 # we did previously
 prompt_histdt() {
-  prompt_segment black default "\! [\@]"
+    prompt_segment black default "\! [\A]"
 }
 
 
@@ -243,15 +243,15 @@ git_status_dirty() {
 prompt_git() {
     local ref dirty
     if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
-	ZSH_THEME_GIT_PROMPT_DIRTY='±'
-	dirty=$(git_status_dirty)
-	ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git show-ref --head -s --abbrev |head -n1 2> /dev/null)"
-	if [[ -n $dirty ]]; then
-	    prompt_segment yellow black
-	else
-	    prompt_segment green black
-	fi
-	PR="$PR${ref/refs\/heads\// }$dirty "
+        ZSH_THEME_GIT_PROMPT_DIRTY='±'
+        dirty=$(git_status_dirty)
+        ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git show-ref --head -s --abbrev |head -n1 2> /dev/null)"
+        if [[ -n $dirty ]]; then
+            prompt_segment yellow black
+        else
+            prompt_segment green black
+        fi
+        PR="$PR${ref/refs\/heads\// }$dirty"
     fi
 }
 
@@ -286,15 +286,15 @@ rightprompt() {
 
 # quick right prompt I grabbed to test things.
 __command_rprompt() {
-	local times= n=$COLUMNS tz
-	for tz in ZRH:Europe/Zurich PIT:US/Eastern \
-	          MTV:US/Pacific TOK:Asia/Tokyo; do
-		[ $n -gt 40 ] || break
-		times="$times ${tz%%:*}\e[30;1m:\e[0;36;1m"
-		times="$times$(TZ=${tz#*:} date +%H:%M)\e[0m"
-		n=$(( $n - 10 ))
-	done
-	[ -z "$times" ] || printf "%${n}s$times\\r" ''
+    local times= n=$COLUMNS tz
+    for tz in ZRH:Europe/Zurich PIT:US/Eastern \
+            MTV:US/Pacific TOK:Asia/Tokyo; do
+        [ $n -gt 40 ] || break
+        times="$times ${tz%%:*}\e[30;1m:\e[0;36;1m"
+        times="$times$(TZ=${tz#*:} date +%H:%M)\e[0m"
+        n=$(( $n - 10 ))
+    done
+    [ -z "$times" ] || printf "%${n}s$times\\r" ''
 }
 # PROMPT_COMMAND=__command_rprompt
 
@@ -304,17 +304,17 @@ ansi_r() {
     declare -a mycodes2=("${!1}")
 
     debug "ansi: ${!1} all: $* aka ${mycodes2[@]}"
-    
+
     seq=""
     for ((i = 0; i < ${#mycodes2[@]}; i++)); do
-	if [[ -n $seq ]]; then
-	    seq="${seq};"
-	fi
-	seq="${seq}${mycodes2[$i]}"
+        if [[ -n $seq ]]; then
+            seq="${seq};"
+        fi
+        seq="${seq}${mycodes2[$i]}"
     done
     debug "ansi debug:" '\\[\\033['${seq}'m\\]'
     echo -ne '\033['${seq}'m'
-#    PR="$PR\[\033[${seq}m\]"
+    # PR="$PR\[\033[${seq}m\]"
 }
 
 # Begin a segment on the right
@@ -335,33 +335,33 @@ prompt_right_segment() {
     codes=("${codes[@]}" $(text_effect reset))
     #    fi
     if [[ -n $1 ]]; then
-	bg=$(bg_color $1)
-	codes=("${codes[@]}" $bg)
-	debug "Added $bg as background to codes"
+        bg=$(bg_color $1)
+        codes=("${codes[@]}" $bg)
+        debug "Added $bg as background to codes"
     fi
     if [[ -n $2 ]]; then
-	fg=$(fg_color $2)
-	codes=("${codes[@]}" $fg)
-	debug "Added $fg as foreground to codes"
+        fg=$(fg_color $2)
+        codes=("${codes[@]}" $fg)
+        debug "Added $fg as foreground to codes"
     fi
 
     debug "Right Codes: "
-#    declare -p codes
+    # declare -p codes
 
     # right always has a separator
-#    if [[ $CURRENT_RBG != NONE && $1 != $CURRENT_RBG ]]; then
-#	$CURRENT_RBG=
-#    fi
+    # if [[ $CURRENT_RBG != NONE && $1 != $CURRENT_RBG ]]; then
+    #     $CURRENT_RBG=
+    # fi
     declare -a intermediate2=($(fg_color $1) $(bg_color $CURRENT_RBG) )
-#    PRIGHT="$PRIGHT---"
+    # PRIGHT="$PRIGHT---"
     debug "pre prompt " $(ansi_r intermediate2[@])
     PRIGHT="$PRIGHT$(ansi_r intermediate2[@])$RIGHT_SEPARATOR"
     debug "post prompt " $(ansi_r codes[@])
     PRIGHT="$PRIGHT$(ansi_r codes[@]) "
- #   else
-#	debug "no current BG, codes is $codes[@]"
-#	PRIGHT="$PRIGHT$(ansi codes[@]) "
-#    fi
+    # else
+    #     debug "no current BG, codes is $codes[@]"
+    #     PRIGHT="$PRIGHT$(ansi codes[@]) "
+    # fi
     CURRENT_RBG=$1
     [[ -n $3 ]] && PRIGHT="$PRIGHT$3"
 }
@@ -402,7 +402,7 @@ build_prompt() {
     prompt_end
 }
 
-# from orig... 
+# from orig...
 # export PS1='$(ansi_single $(text_effect reset)) $(build_prompt) '
 # this doesn't work... new model: create a prompt via a PR variable and
 # use that.
@@ -420,5 +420,4 @@ set_bash_prompt() {
     PS1=$PR
 }
 
-PROMPT_COMMAND=set_bash_prompt
-
+PROMPT_COMMAND=set_bash_promptt
