@@ -207,11 +207,11 @@ prompt_end() {
 
 ### virtualenv prompt
 prompt_virtualenv() {
-  if [[ -n $VIRTUAL_ENV ]]; then
-    color=cyan
-    prompt_segment $color $PRIMARY_FG
-    prompt_segment $color white "$(basename $VIRTUAL_ENV)"
-  fi
+    if [[ -n $VIRTUAL_ENV ]]; then
+	color=cyan
+	prompt_segment $color $PRIMARY_FG
+	prompt_segment $color white "$(basename $VIRTUAL_ENV)"
+    fi
 }
 
 
@@ -288,7 +288,7 @@ rightprompt() {
 __command_rprompt() {
     local times= n=$COLUMNS tz
     for tz in ZRH:Europe/Zurich PIT:US/Eastern \
-            MTV:US/Pacific TOK:Asia/Tokyo; do
+				MTV:US/Pacific TOK:Asia/Tokyo; do
         [ $n -gt 40 ] || break
         times="$times ${tz%%:*}\e[30;1m:\e[0;36;1m"
         times="$times$(TZ=${tz#*:} date +%H:%M)\e[0m"
@@ -386,7 +386,7 @@ prompt_right_segment() {
 prompt_emacsdir() {
     # no color or other setting... this will be deleted per above
     PR="DIR \w DIR$PR"
- }
+}
 
 ######################################################################
 ## Main prompt
