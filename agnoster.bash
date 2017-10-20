@@ -420,4 +420,4 @@ set_bash_prompt() {
     PS1=$PR
 }
 
-PROMPT_COMMAND=set_bash_promptt
+PROMPT_COMMAND=set_bash_prompt
