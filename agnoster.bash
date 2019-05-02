@@ -214,6 +214,14 @@ prompt_virtualenv() {
     fi
 }
 
+### conda prompt
+prompt_condaenv() {
+    if [[ -n $CONDA_DEFAULT_ENV ]]; then
+        color=cyan
+        prompt_segment $color $PRIMARY_FG
+        prompt_segment $color white "$(basename $CONDA_DEFAULT_ENV)"
+    fi
+}
 
 ### Prompt components
 # Each component will draw itself, and hide itself if no information needs to be shown
@@ -396,7 +404,8 @@ build_prompt() {
     prompt_status
     #[[ -z ${AG_NO_HIST+x} ]] && prompt_histdt
     [[ -z ${AG_NO_CONTEXT+x} ]] && prompt_context
-    prompt_virtualenv
+    #prompt_virtualenv
+    prompt_condaenv
     prompt_dir
     prompt_git
     prompt_end
