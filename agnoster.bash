@@ -239,19 +239,25 @@ git_status_dirty() {
     [[ -n $dirty ]] && echo " ●"
 }
 
+git_stash_dirty() {
+    stash=$(git stash list 2> /dev/null | tail -n 1)
+    [[ -n $stash ]] && echo " ⚑"
+}
+
 # Git: branch/detached head, dirty status
 prompt_git() {
     local ref dirty
     if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
         ZSH_THEME_GIT_PROMPT_DIRTY='±'
         dirty=$(git_status_dirty)
+        stash=$(git_stash_dirty)
         ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git show-ref --head -s --abbrev |head -n1 2> /dev/null)"
         if [[ -n $dirty ]]; then
             prompt_segment yellow black
         else
             prompt_segment green black
         fi
-        PR="$PR${ref/refs\/heads\// }$dirty"
+        PR="$PR${ref/refs\/heads\// }$stash$dirty"
     fi
 }
 
