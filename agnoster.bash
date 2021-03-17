@@ -245,7 +245,9 @@ prompt_git() {
     if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
         ZSH_THEME_GIT_PROMPT_DIRTY='±'
         dirty=$(git_status_dirty)
-        ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git show-ref --head -s --abbrev |head -n1 2> /dev/null)"
+        ref=$(git symbolic-ref HEAD 2> /dev/null) \
+            || ref="➦ $(git describe --exact-match --tags HEAD 2> /dev/null)" \
+            || ref="➦ $(git show-ref --head -s --abbrev | head -n1 2> /dev/null)"
         if [[ -n $dirty ]]; then
             prompt_segment yellow black
         else
