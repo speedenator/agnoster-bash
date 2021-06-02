@@ -205,13 +205,17 @@ prompt_end() {
     CURRENT_BG=''
 }
 
-### virtualenv prompt
+### virtualenv or conda env prompt
 prompt_virtualenv() {
     if [[ -n $VIRTUAL_ENV ]]; then
         color=cyan
         prompt_segment $color $PRIMARY_FG
         #prompt_segment $color white "$(basename $VIRTUAL_ENV)"
         prompt_segment $color white "$(basename $VIRTUAL_ENV | rev | cut -f2 -d- | rev)"
+    elif [[ -n $CONDA_DEFAULT_ENV ]]; then
+        color=cyan
+        prompt_segment $color $PRIMARY_FG
+        prompt_segment $color white "$CONDA_DEFAULT_ENV"
     fi
 }
 
