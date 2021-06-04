@@ -316,6 +316,16 @@ prompt_status() {
     [[ -n "$symbols" ]] && prompt_segment black default "$symbols"
 }
 
+prompt_emoji() {
+    if [[ $HOSTNAME = "picottemgmt" ]]; then
+      prompt_segment black yellow "🌶"
+    elif [[ $HOSTNAME = "picotte001" ]]; then
+      prompt_segment black yellow "🥦"
+    else
+      prompt_segment black yellow "🌮"
+    fi
+}
+
 ######################################################################
 #
 # experimental right prompt stuff
@@ -436,6 +446,7 @@ prompt_emacsdir() {
 build_prompt() {
     [[ ! -z ${AG_EMACS_DIR+x} ]] && prompt_emacsdir
     prompt_status
+    prompt_emoji
     #[[ -z ${AG_NO_HIST+x} ]] && prompt_histdt
     [[ -z ${AG_NO_CONTEXT+x} ]] && prompt_context
     prompt_virtualenv
