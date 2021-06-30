@@ -225,8 +225,9 @@ prompt_virtualenv() {
 # Context: user@hostname (who am I and where am I)
 prompt_context() {
     local user=`whoami`
+    local hostname=`uname -n`
 
-    if [[ $user != $DEFAULT_USER || -n $SSH_CLIENT ]]; then
+    if [[ $hostname != "picottemgmt" && $hostname != "picotte001" && ($user != $DEFAULT_USER || -n $SSH_CLIENT) ]]; then
         prompt_segment black default "$user@\h"
     fi
 }
@@ -317,9 +318,10 @@ prompt_status() {
 }
 
 prompt_emoji() {
-    if [[ $HOSTNAME = "picottemgmt" ]]; then
+    local hostname=`uname -n`
+    if [[ $hostname = "picottemgmt" ]]; then
       prompt_segment black yellow "🌶"
-    elif [[ $HOSTNAME = "picotte001" ]]; then
+    elif [[ $hostname = "picotte001" ]]; then
       prompt_segment black yellow "🥦"
     else
       prompt_segment black yellow "🌮"
@@ -452,7 +454,7 @@ build_prompt() {
     prompt_virtualenv
     prompt_dir
     prompt_git
-    prompt_hg
+    #prompt_hg
     prompt_end
 }
 
@@ -474,4 +476,4 @@ set_bash_prompt() {
     PS1=$PR
 }
 
-PROMPT_COMMAND=set_bash_prompt
+PROMPT_COMMAND='set_bash_prompt && echo -ne "\033]0;$(uname -n)\007"'
