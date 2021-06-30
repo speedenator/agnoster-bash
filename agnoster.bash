@@ -476,4 +476,4 @@ set_bash_prompt() {
     PS1=$PR
 }
 
-PROMPT_COMMAND='set_bash_prompt && echo -ne "\033]0;$(uname -n)\007"'
+PROMPT_COMMAND='set_bash_prompt && echo -ne "\033]0;${HOSTNAME}\007"'
