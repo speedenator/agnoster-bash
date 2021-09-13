@@ -254,12 +254,13 @@ prompt_git() {
         ref=$(git symbolic-ref HEAD 2> /dev/null) \
             || ref="➦ $(git describe --exact-match --tags HEAD 2> /dev/null)" \
             || ref="➦ $(git show-ref --head -s --abbrev | head -n1 2> /dev/null)"
+        detail=$(git branch --list "${ref/refs\/heads\//}" --format "%(upstream:track)")
         if [[ -n $dirty ]]; then
             prompt_segment yellow black
         else
             prompt_segment green black
         fi
-        PR="$PR${ref/refs\/heads\// }$stash$dirty"
+        PR="$PR${ref/refs\/heads\// }$stash$dirty $detail"
     fi
 }
 
