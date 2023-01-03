@@ -99,29 +99,41 @@ text_effect() {
 # under the "256 (8-bit) Colors" section, and follow the example for orange below
 fg_color() {
     case "$1" in
-        black)      echo 30;;
-        red)        echo 31;;
-        green)      echo 32;;
-        yellow)     echo 33;;
-        blue)       echo 34;;
-        magenta)    echo 35;;
-        cyan)       echo 36;;
-        white)      echo 37;;
-        orange)     echo 38\;5\;166;;
+        black)          echo 30;;
+        darkred)        echo 31;;
+        darkgreen)      echo 32;;
+        yellow)         echo 33;;
+        darkblue)       echo 34;;
+        darkmagenta)    echo 35;;
+        darkcyan)       echo 36;;
+        white)          echo 37;;
+        darkgray)       echo 90;;
+        red)            echo 91;;
+        green)          echo 92;;
+        orange)         echo 93;;
+        blue)           echo 94;;
+        magenta)        echo 95;;
+        cyan)           echo 96\;5\;166;;
     esac
 }
 
 bg_color() {
     case "$1" in
-        black)      echo 40;;
-        red)        echo 41;;
-        green)      echo 42;;
-        yellow)     echo 43;;
-        blue)       echo 44;;
-        magenta)    echo 45;;
-        cyan)       echo 46;;
-        white)      echo 47;;
-        orange)     echo 48\;5\;166;;
+        black)          echo 40;;
+        darkred)        echo 41;;
+        darkgreen)      echo 42;;
+        yellow)         echo 43;;
+        darkblue)       echo 44;;
+        darkmagenta)    echo 45;;
+        darkcyan)       echo 46;;
+        white)          echo 47;;
+        darkgray)       echo 100;;
+        red)            echo 101;;
+        green)          echo 102;;
+        orange)         echo 103;;
+        blue)           echo 104;;
+        magenta)        echo 105;;
+        cyan)           echo 106\;5\;166;;
     esac;
 }
 
@@ -208,7 +220,7 @@ prompt_end() {
 ### virtualenv prompt
 prompt_virtualenv() {
     if [[ -n $VIRTUAL_ENV ]]; then
-        color=cyan
+        color=darkcyan
         prompt_segment $color $PRIMARY_FG
         prompt_segment $color white "$(basename $VIRTUAL_ENV)"
     fi
@@ -257,7 +269,7 @@ prompt_git() {
         if [[ -n $dirty ]]; then
             prompt_segment yellow black
         else
-            prompt_segment green black
+            prompt_segment darkgreen black
         fi
         PR="$PR${ref/refs\/heads\// }$stash$dirty"
     fi
@@ -270,7 +282,7 @@ prompt_hg() {
         if $(hg prompt >/dev/null 2>&1); then
             if [[ $(hg prompt "{status|unknown}") = "?" ]]; then
                 # if files are not added
-                prompt_segment red white
+                prompt_segment darkred white
                 st='±'
             elif [[ -n $(hg prompt "{status|modified}") ]]; then
                 # if any modification
@@ -278,7 +290,7 @@ prompt_hg() {
                 st='±'
             else
                 # if working copy is clean
-                prompt_segment green black $CURRENT_FG
+                prompt_segment darkgreen black $CURRENT_FG
             fi
             PR="$PR$(hg prompt "☿ {rev}@{branch}") $st"
         else
@@ -286,13 +298,13 @@ prompt_hg() {
             rev=$(hg id -n 2>/dev/null | sed 's/[^-0-9]//g')
             branch=$(hg id -b 2>/dev/null)
             if `hg st | grep -q "^\?"`; then
-                prompt_segment red white
+                prompt_segment darkred white
                 st='±'
             elif `hg st | grep -q "^[MA]"`; then
                 prompt_segment yellow black
                 st='±'
             else
-                prompt_segment green black $CURRENT_FG
+                prompt_segment darkgreen black $CURRENT_FG
             fi
             PR="$PR☿ $rev@$branch $st"
         fi
@@ -301,7 +313,7 @@ prompt_hg() {
 
 # Dir: current working directory
 prompt_dir() {
-    prompt_segment blue black '\w'
+    prompt_segment darkblue black '\w'
 }
 
 # Status:
@@ -311,9 +323,9 @@ prompt_dir() {
 prompt_status() {
     local symbols
     symbols=()
-    [[ $RETVAL -ne 0 ]] && symbols+="$(ansi_single $(fg_color red))✘"
+    [[ $RETVAL -ne 0 ]] && symbols+="$(ansi_single $(fg_color darkred))✘"
     [[ $UID -eq 0 ]] && symbols+="$(ansi_single $(fg_color yellow))⚡"
-    [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="$(ansi_single $(fg_color cyan))⚙"
+    [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="$(ansi_single $(fg_color darkcyan))⚙"
 
     [[ -n "$symbols" ]] && prompt_segment black default "$symbols"
 }
